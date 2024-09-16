@@ -14,7 +14,7 @@ const UploadFile = ({ setCurrentPage, loadItems }) => {
                 setCurrentPage(1);
                 await loadItems(1);
             } catch (err) {
-                alert(err.message);
+                console.error(err.message);
             }
         };
 

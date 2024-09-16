@@ -1,7 +1,7 @@
 import React from 'react';
-import { API_URL } from '../config/config';
+import { uploadFile } from '../api/api';
 
-const UploadFile = ({ setItems, setCurrentPage, loadItems }) => {
+const UploadFile = ({ setCurrentPage, loadItems }) => {
     const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -10,20 +10,9 @@ const UploadFile = ({ setItems, setCurrentPage, loadItems }) => {
         reader.onload = async (e) => {
             try {
                 const jsonData = JSON.parse(e.target.result);
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(jsonData)
-                });
-
-                if (response.ok) {
-                    setCurrentPage(1);
-                    await loadItems(1);
-                } else {
-                    throw new Error('Error uploading file');
-                }
+                await uploadFile(jsonData);
+                setCurrentPage(1);
+                await loadItems(1);
             } catch (err) {
                 alert(err.message);
             }

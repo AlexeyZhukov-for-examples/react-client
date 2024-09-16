@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import ItemTable from './components/ItemTable';
 import Pagination from './components/Pagination';
 import UploadFile from './components/UploadFile';
-import { API_URL, PAGE_SIZE } from './config/config';
+import { loadItems as fetchItems } from './api/api';
 
 const App = () => {
     const [items, setItems] = useState([]);
@@ -12,11 +12,7 @@ const App = () => {
 
     const loadItems = useCallback(async (page) => {
         try {
-            const response = await fetch(`${API_URL}?page=${page}&pageSize=${PAGE_SIZE}${filterCode ? `&code=${filterCode}` : ''}`);
-            if (!response.ok) {
-                throw new Error('Error loading items');
-            }
-            const data = await response.json();
+            const data = await fetchItems(page, filterCode);
             setItems(data);
             setCurrentPage(page);
         } catch (err) {
